@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible"
+        content="IE=edge">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+    <!-- linked bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+        crossorigin="anonymous">
+    <!-- linked style sheet -->    
+    <link rel="stylesheet"
+        type="text/css"
+        href="{{ url_for('static', filename='style.css') }}">
+    <style>
+
+    </style>
+    <!-- Title of page // Dashboard/Landing page-->
+    <title>Dashboard - home page once logged on</title>
+</head>
+
+<body class="bg-dark text-light d-flex justify-content-start container-xxl">
+    <div class="flex-row ">
+        <div>
+            <!-- display new user's name in the welcome h2-->
+            <h2 class="container-lg mb-5">
+                Welcome, {{newUser.first_name}}
+            </h2>
+        </div>
+        <div class="d-flex flex-row justify-content-start">
+            <!-- jinja flash messages - declare a variable called messages-->
+            <!-- flash messages within div to add warning colors etc. -->
+            <!-- flash on this page only shows if users try to do actions they don't have access to --> 
+            {% with messages = get_flashed_messages () %} {# category goes inside parenthesis // no category filter needed since it's the only flash for that page #}
+            {% if messages %}
+            <!-- alert box where flash is displayed-->
+            <div class="d-flex p-2 flex-column justify-content-start border bg-danger text-dark">
+                {% for message in messages %}
+                <p>{{message}}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+        </div>
+        <div class="mt-2 d-flex flex-row justify-content-between">
+            <!-- table title-->
+            <div>
+                <h4 class="me-5">All posted recipes:</h4>
+            </div>
+            <div>
+                <!-- links to create a new show and link to log out-->
+                <a href="/newRecipe"
+                    class="me-2 btn btn-primary">+ Create</a>
+                <a href="/logout"
+                    class="ms-2 btn btn-primary">Logout</a>
+            </div>
+        </div>
+        <!-- All posted shows table-->
+        <table
+            class="table container table-dark table-hover table-striped rounded border border-1 border-light mt-5 text-capitalize table-bordered">
+            <thead>
+                <tr class="table table-row-1 text-light">
+                    <th>Name</th>
+                    <th>Under 30 Minutes</th>
+                    <th>Posted By</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <!-- table that lists all shows // also show specific actions based on who's logged in so delete and edit are available to *click*-->
+            <tbody>
+                <tr>{% for recipe in all_recipes %}
+                    <td>{{ recipe.name }}</td>
+                    <!--! use jinja for yes/no - Radio -->
+                    {% if recipe.under_30_minutes == 1%}
+                    <td>Yes</td>
+                    {% else %}
+                    <td>No</td>
+                    {% endif %}
+                    <td>{{recipe.creator.first_name}}</td>
+                    <td> {# list of actions available for user who's logged in  - view | Edit | Delete #}
+                        <a href="/viewOne/{{recipe.id}}">View Recipe</a> |
+                        {% if session ['user_id'] == recipe.user_id %} <a href="/editRecipe/{{recipe.id}}">Edit</a> {% endif
+                        %} |
+                        {% if session ['user_id'] == recipe.user_id %} <a href="/delete/{{recipe.id}}">Delete</a>{% endif %}
+                    </td>
+                </tr>{% endfor %}
+            </tbody>
+        </table>
+        <div>
+        </div>
+    </div>
+    </div>
+
+    </div>
+    <!-- bootstrap-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

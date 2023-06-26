@@ -1,0 +1,159 @@
+>>NOTES<<
+-1st table is the main point for one to many (using left join) - Example: recipes left join user
+
+-each form = a new route (register, login, edit, and add new)
+
+-each show page = a new route show:  (login page, list of recipes(aka dashboard), show add new, show 1 recipe, show edit form)
+
+-Classmethods - what happens when you get to the place you're going to = our database interactions(back end interactoions)
+
+-staticmethod - method bound to a class rather than its object
+
+-GET REQUEST (1 per page) - 5 get request for an assignment with 5 pages on its wireframe ("Item" used as place holder for shows, books, recipes, etc.)
+
+    login (login & Registration page)
+    dashboard (list of shows page)
+    newItem (add a item)
+    editItem (edit a item)
+    viewItem (view 1 item)
+
+
+
+
+*****************************************************************************************************
+===============================
+
+        ***** A-Tag *****
+
+===============================
+ - "delete":
+    >classmethod - Show Controller 
+    >refer to html delete show per session id
+
+xx - "log out":
+    >Get/Post route that uses the redirect back to login (home page & clear session)
+
+ - "back to items": (like back to items)
+    >a tag directly to dashboard (view all items) = ('/......')
+    >**GET Request - GET Request - dashboard
+    >"back to items" a-tag, takes us from any view, edit, add page to dashboard
+
+
+ - "+ create": (aka "add one" or "make one")
+    >a tag directly to ('/.....') (newItem html*)
+    >**GET Request - newItem form**
+
+
+*****************************************************************************************************
+*****************************************************************************************************
+
+===============================
+***** USER_CONTROLLER *****
+        App Routes
+        (USER Table)
+===============================
+
+xx -  GET Request -route home 
+        >>>> ('/') // render template -> sign in/home page
+
+xx - POST-route to register new user 
+        - >>>> ('/....', methods=['POST'] // redirect to home to log if wrong or to dashboard(logged in)) 
+        - >>>> [[call - validate "register a new user" staticmethod]] 
+
+xx - POST-route to login >>>> ('/....', methods=['POST'] // redirect -> dashboard)
+        - >>>> includes validate login
+
+xx - GET Request - to dashboard (read access to all) (write access to your own shows ONLY*) (usually your account page after you've logged in and not your home page*) 
+        >>>> ('/....') // render template -> dashboard
+
+xx - GET/POST-route to logout (UNIQUE - a-tag with clear session)
+       - >>>>  ('/....') // redirect -> login (home page & clear)
+
+
+===============================
+    ***** USER_MODEL *****
+Classmethods & Staticmethod
+        (USER Table)
+===============================
+xx - validate a new user - <<STATIC>> (unique)
+        - >>>> checks with flash messages  (first_name, last_name, valid email type, email w/in db, valid pw, valid confirm pw)
+        - >>>> VALIDATES NEW REGISTER
+
+xx - get one by email - <<CLASSMETHODS>>
+        - >>>> pulls user based on query searching emails
+
+xx - get one by id - <<CLASSMETHODS>>
+        - >>>> pulls user based on query searching id
+
+xx - save a new user - <<CLASSMETHODS>>
+        - >>>> adds new user to the DB
+
+*****************************************************************************************************
+*****************************************************************************************************
+
+
+
+===============================
+***** ITEM_CONTROLLER *****
+        App Route
+    (ITEMS) Table
+===============================
+- GET Request -  page to view new ITEM  form
+        >>>> ('/') // render template - new item form
+
+- POST-user add new item 
+        >>>> ('/....', methods=['POST'] // redirect to updated dashboard)
+        
+- GET Request - page to view edit item form 
+        >>>> ('/') // render template
+        >>>> placeholders needed to pre populate existing fields
+
+- POST- edits a specific item
+        >>>> ('/....', methods=['POST'] // redirect to updated dashboard)
+        >>>> should contain validation that specific user can edit
+
+
+- GET Request-user views a specific item "view item"
+        X - >>>> ('/') // render template
+        X - >>>> displays specific item info from the db
+
+- GET/POST-route to delete item (UNIQUE - a tag with delete)
+        >>>> ('/..../<int:id>') // redirect -> ('/')
+        >>>> should contain validation that specific user can edit
+
+===============================
+    ***** ITEM_MODEL *****
+Classmethods & Staticmethod
+        (Items Table)
+===============================
+- view all items <<CLASS>>
+        >>>>(show all item info with LEFT JOIN) or just JOIN
+
+- save new item <<CLASS>>
+        - >>>>saving and adding a new item to the DB
+
+- save edited item  <<CLASS>>
+        >>>>updating existing item in the DB
+
+- validate new & edit item (for edit and new same) <<STATIC>>
+        >>>>same for edit & add new - validate form to submit new details to DB
+        
+- view single item  <<CLASS>>
+        - >>>> get_one_item from the DB (show selected item) - LEFT JOIN or JOIN required
+
+- deletes a item from the db <<CLASSMETHOD>>
+        >>>>delete specific item by id from the DB (controller will have the validation check)
+
+
+*****************************************************************************************************
+*****************************************************************************************************
+
+
+
+
+
+
+
+
+
+
